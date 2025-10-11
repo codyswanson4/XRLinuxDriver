@@ -33,7 +33,6 @@ echo "Created temp directory: ${tmp_dir}"
 binary_download_url="https://github.com/wheaney/XRLinuxDriver/releases/latest/download/xrDriver-$ARCH.tar.gz"
 if [ "$1" = "-v" ]
 then
-  metrics_version="$2"
   binary_path_arg="$3"
 elif [ "$1" = "--tag" ] && [ -n "$2" ]
 then
@@ -64,8 +63,8 @@ tar -xf $(basename $binary_path_arg)
 
 pushd xr_driver > /dev/null
 
-# run the setup script that comes with this release, pass in the metrics version
-./setup $metrics_version
+# run the setup script that comes with this release
+./setup
 
 echo "Deleting temp directory: ${tmp_dir}"
 rm -rf $tmp_dir

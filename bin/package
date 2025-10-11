@@ -6,13 +6,6 @@ set -e
 USER=${SUDO_USER:-$USER}
 GROUP=$(id -gn $USER)
 
-source bin/inject_ua
-
-if [ -z "$UA_API_SECRET" ] && [ -z "$UA_API_SECRET_INTENTIONALLY_EMPTY" ]; then
-  echo "UA_API_SECRET isn't set. If this is intentional, set UA_API_SECRET_INTENTIONALLY_EMPTY to a non-empty value."
-  exit 1
-fi
-
 ARCH=$(uname -m)
 echo "Building for $ARCH"
 
@@ -33,11 +26,6 @@ PACKAGE_USER_BIN_DIR=$PACKAGE_BIN_DIR/user
 mkdir -p $PACKAGE_USER_BIN_DIR
 
 mv xrDriver $PACKAGE_BIN_DIR
-
-# copy setup and user-relevant scripts
-copy_and_inject_ua "../bin/ua.sh" "$PACKAGE_DIR" "../bin/setup"
-copy_and_inject_ua "../bin/ua.sh" "$PACKAGE_BIN_DIR" "../bin/xr_driver_verify" "../bin/xr_driver_cli" "../bin/xr_driver_uninstall"
-copy_and_inject_ua "../bin/ua.sh" "$PACKAGE_USER_BIN_DIR" "../bin/user/install" "../bin/user/systemd_start"
 
 # copy the systemd files needed to run our service
 cp -r ../systemd $PACKAGE_DIR

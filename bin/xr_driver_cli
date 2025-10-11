@@ -146,13 +146,6 @@ then
         if [ -n "$2" ]; then
             config_value="$2"
         fi
-    elif [ "$1" == "--disable-metrics" ] || [ "$1" == "-dm" ]; then
-        config_key="metrics_disabled"
-        config_value="true"
-    elif [ "$1" == "--request-token" ] || [ "$1" == "--verify-token" ] || [ "$1" == "--refresh-license" ] || [ "$1" == "--get-hardware-id" ]; then
-        config_type="string"
-        config_key="hardware_id"
-        config_file="/dev/shm/xr_driver_state"
     elif [ "$1" == "--view-log" ] || [ "$1" == "-l" ]; then
         less +F "$LOG_FILE"
     fi
@@ -201,34 +194,6 @@ then
                     break
                 fi
             done < "$config_file"
-
-            if [ "$1" == "--request-token" ] || [ "$1" == "--verify-token" ] || [ "$1" == "--refresh-license" ]; then
-                hardware_id=$value
-                url="https://eu.driver-backend.xronlinux.com/tokens/v1"
-
-                if [ "$1" == "--request-token" ]; then
-                    postbody=$(jq -n \
-                                --arg hardwareId "$hardware_id" \
-                                --arg email "$2" \
-                                '{hardwareId: $hardwareId, email: $email}')
-                    message=$(curl -s -X POST -H "Content-Type: application/json" -d "$postbody" "$url" | jq -r '.message')
-                elif [ "$1" == "--verify-token" ]; then
-                    postbody=$(jq -n \
-                                --arg hardwareId "$hardware_id" \
-                                --arg token "$2" \
-                                '{hardwareId: $hardwareId, token: $token}')
-                    message=$(curl -s -X PUT -H "Content-Type: application/json" -d "$postbody" "$url" | jq -r '.message')
-                elif [ "$1" == "--refresh-license" ]; then
-                    echo "refresh_device_license=true" > /dev/shm/xr_driver_control
-                    message="License refresh requested"
-                fi
-
-                if [ -n "$message" ]; then
-                    echo "$message"
-                fi
-            else
-                echo "$value"
-            fi
         fi
 
         exit 0
@@ -267,8 +232,6 @@ Options:
   -sbsdd, --sbs-display-distance [display_distance]
   -nsh, --neck-saver-horizontal [multiplier]
   -nsv, --neck-saver-vertical [multiplier]
-  -dm, --disable-metrics
   --request-token [email]
   --verify-token [token]
-  --refresh-license
   --get-hardware-id"

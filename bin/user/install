@@ -10,7 +10,6 @@ fi
 
 GROUP=$(id -gn $USER)
 USER_HOME=$(getent passwd $USER | cut -d: -f6)
-UA_EVENT_NAME="install"
 
 if [ -z "$XDG_DATA_HOME" ]; then
   XDG_DATA_HOME="$USER_HOME/.local/share"
@@ -39,8 +38,6 @@ if [ -e "$OLD_BIN_DIR/xreal_driver_uninstall" ]; then
 
   # ` || true` will ensure that this can't cause a failure, even with `set -e`
   $OLD_BIN_DIR/xreal_driver_uninstall --for-install || true
-
-  UA_EVENT_NAME="update"
 fi
 
 if [ -e "$BIN_DIR/xr_driver_uninstall" ]; then
@@ -48,13 +45,7 @@ if [ -e "$BIN_DIR/xr_driver_uninstall" ]; then
 
   # ` || true` will ensure that this can't cause a failure, even with `set -e`
   $BIN_DIR/xr_driver_uninstall --for-install || true
-
-  UA_EVENT_NAME="update"
 fi
-
-UA_CLIENT_ID="ARLinuxDriver"
-UA_EVENT_VERSION="$1"
-#INJECT_UA_CALL
 
 # make sure the systemd service isn't already running from a previous install
 systemctl --user is-active --quiet xr-driver && systemctl --user stop xr-driver
@@ -71,17 +62,6 @@ fi
 if [ -e "$USER_HOME/.xreal_driver_log" ]; then
   echo "Migrating log file to ${STATE_DIR}/driver.log"
   mv $USER_HOME/.xreal_driver_log ${STATE_DIR}/driver.log
-fi
-
-if [ -e "/var/lib/xr_driver/device_license" ]; then
-  echo "Migrating device license to ${STATE_DIR}/license.json"
-  pushd /var/lib/xr_driver > /dev/null
-
-  # since the file has root ownership, rename it before moving to a user directory
-  mv "device_license" "license.json"
-  mv "license.json" "${STATE_DIR}/license.json"
-
-  popd > /dev/null
 fi
 
 # escaping sed replace: https://stackoverflow.com/questions/407523/escape-a-string-for-a-sed-replace-pattern

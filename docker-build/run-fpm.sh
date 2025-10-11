@@ -25,8 +25,8 @@ version=$(grep -oP 'project\(xrDriver VERSION \K[0-9]+\.[0-9]+\.[0-9]+' CMakeLis
 
 # Run containers for each architecture
 if [[ "$1" == "x86_64" || -z "$1" ]]; then
-    sudo rm -rf build/
-    docker run --rm -t -v ./:/source --platform linux/amd64 -e UA_API_SECRET -e UA_API_SECRET_INTENTIONALLY_EMPTY "xr-driver:amd64" ./fpm/build
+    rm -rf build/
+    docker run --rm -t -v ./:/source --platform linux/amd64 "xr-driver:amd64" ./fpm/build
 
     lib_args=$(libs_to_fpm_args "build/xr_driver/lib")
     udev_args=$(udev_files_to_fpm_args "build/xr_driver/udev")
@@ -57,8 +57,8 @@ if [[ "$1" == "x86_64" || -z "$1" ]]; then
 fi
 
 if [[ "$1" == "aarch64" || -z "$1"  ]]; then
-    sudo rm -rf build/
-    docker run --rm -t -v ./:/source --platform linux/arm64 -e UA_API_SECRET -e UA_API_SECRET_INTENTIONALLY_EMPTY "xr-driver:arm64" ./fpm/build
+    rm -rf build/
+    docker run --rm -t -v ./:/source --platform linux/arm64 "xr-driver:arm64" ./fpm/build
 
     lib_args=$(libs_to_fpm_args "build/xr_driver/lib")
     udev_args=$(udev_files_to_fpm_args "build/xr_driver/udev")
@@ -92,4 +92,4 @@ mv xr-driver*.deb out/
 mv xr-driver*.rpm out/
 
 # build directory structure is all owned by root because of docker, delete it all now
-sudo rm -rf build/
+rm -rf build/

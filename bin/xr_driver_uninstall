@@ -64,10 +64,6 @@ sudo rm $ALT_UDEV_RULES_DIR/70-*-xr.rules > /dev/null 2>&1 || true
 if [ "$for_install" -eq 0 ]; then
     echo "Removing installed files from $STATE_DIR, $CONFIG_DIR, $DATA_DIR, and $BIN_DIR"
 
-    UA_EVENT_NAME="uninstall"
-    UA_CLIENT_ID="ARLinuxDriver"
-    #INJECT_UA_CALL
-
     rm -rf $STATE_DIR
     rm -rf $CONFIG_DIR
 fi

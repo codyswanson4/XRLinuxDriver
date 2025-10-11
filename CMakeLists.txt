@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(xrDriver VERSION 2.4.1 LANGUAGES C)
+project(freeXR VERSION 2.5 LANGUAGES C)
 
 configure_file(include/version.h.in version.h)
 include_directories(${PROJECT_BINARY_DIR})
@@ -17,19 +17,6 @@ set (custom_banner_yaml_file "${CMAKE_SOURCE_DIR}/custom_banner_config.yml")
 add_custom_target(run_python_script ALL
     COMMAND ${Python3_EXECUTABLE} ${py_cmd} ${custom_banner_yaml_file} ${custom_banner_header_file}
 )
-
-if(DEFINED ENV{UA_API_SECRET})
-  set(UA_API_SECRET $ENV{UA_API_SECRET})
-  message(STATUS "Using UA_API_SECRET from environment")
-  add_definitions(-DUA_API_SECRET="${UA_API_SECRET}")
-else()
-  set(UA_API_SECRET "")
-  message(STATUS "!!! UA_API_SECRET is NOT set")
-endif()
-
-file(READ ${CMAKE_CURRENT_SOURCE_DIR}/license_public_key.pem DEVICE_LICENSE_PUBLIC_KEY_RAW)
-string(REPLACE "\n" "\\n" DEVICE_LICENSE_PUBLIC_KEY_ESCAPED ${DEVICE_LICENSE_PUBLIC_KEY_RAW})
-add_definitions(-DDEVICE_LICENSE_PUBLIC_KEY="${DEVICE_LICENSE_PUBLIC_KEY_ESCAPED}")
 
 find_package(Threads REQUIRED)
 
@@ -106,9 +93,7 @@ set(SOURCES
     src/plugins.c
     src/plugins/breezy_desktop.c
     src/plugins/custom_banner.c
-    src/plugins/device_license.c
     src/plugins/gamescope_reshade_wayland.c
-    src/plugins/metrics.c
     src/plugins/sideview.c
     src/plugins/smooth_follow.c
     src/plugins/virtual_display.c

@@ -2,9 +2,7 @@
 #include "plugins.h"
 #include "plugins/custom_banner.h"
 #include "plugins/breezy_desktop.h"
-#include "plugins/device_license.h"
 #include "plugins/gamescope_reshade_wayland.h"
-#include "plugins/metrics.h"
 #include "plugins/sideview.h"
 #include "plugins/smooth_follow.h"
 #include "plugins/virtual_display.h"
@@ -15,12 +13,10 @@
 
 #include <stdlib.h>
 
-#define PLUGIN_COUNT 11
+#define PLUGIN_COUNT 9
 const plugin_type* all_plugins[PLUGIN_COUNT] = {
-    &device_license_plugin,
     &virtual_display_plugin,
     &sideview_plugin,
-    &metrics_plugin,
     &custom_banner_plugin,
     &smooth_follow_plugin,
     &breezy_desktop_plugin,
