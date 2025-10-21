@@ -31,7 +31,8 @@ jobs:
 
     steps:
     - name: Install required packages
-      run: sudo apt install -y libusb-1.0-0-dev 
+      run: sudo apt install -y libusb-1.0-0-dev libudev-dev libcurl4-openssl-dev libevdev-dev libssl-dev libjson-c-dev libwayland-dev
+
     - uses: actions/checkout@v4
 
     - name: Set reusable strings
