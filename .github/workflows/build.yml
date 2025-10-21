@@ -30,6 +30,8 @@ jobs:
             cpp_compiler: g++
 
     steps:
+    - name: Install required packages
+      run: sudo apt install -y libusb-1.0-0-dev 
     - uses: actions/checkout@v4
 
     - name: Set reusable strings
