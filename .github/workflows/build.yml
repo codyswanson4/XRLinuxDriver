@@ -30,6 +30,9 @@ jobs:
             cpp_compiler: g++
 
     steps:
+    - name: Update packages
+      run: sudo apt update && sudo apt upgrade
+
     - name: Install required packages
       run: sudo apt install -y libusb-1.0-0-dev libudev-dev libcurl4-openssl-dev libevdev-dev libssl-dev libjson-c-dev libwayland-dev
 
