@@ -1,6 +1,5 @@
 #include "config.h"
 #include "devices.h"
-#include "features/smooth_follow.h"
 #include "features/sbs.h"
 #include "imu.h"
 #include "ipc.h"
@@ -61,7 +60,7 @@ void virtual_display_handle_config_line_func(void* config, char* key, char* valu
         boolean_config(key, value, &temp_config->sbs_content);
     } else if (equal(key, "sbs_mode_stretched")) {
         boolean_config(key, value, &temp_config->sbs_mode_stretched);
-    } else if (equal(key, "sideview_smooth_follow_enabled") && is_smooth_follow_granted()) {
+    } else if (equal(key, "sideview_smooth_follow_enabled")) {
         boolean_config(key, value, &temp_config->passthrough_smooth_follow_enabled);
     } else if (equal(key, "curved_display")) {
         boolean_config(key, value, &temp_config->curved_display);
@@ -261,7 +260,7 @@ bool virtual_display_setup_ipc_func() {
 }
 
 void virtual_display_handle_state_func() {
-    bool sbs_enabled = state()->sbs_mode_enabled && is_sbs_granted();
+    bool sbs_enabled = state()->sbs_mode_enabled;
     if (virtual_display_ipc_values) *virtual_display_ipc_values->sbs_enabled = sbs_enabled;
     set_gamescope_reshade_effect_uniform_variable("sbs_enabled", &sbs_enabled, 1, sizeof(bool), true);
 

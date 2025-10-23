@@ -81,9 +81,6 @@ set(SOURCES
     src/devices.c
     src/driver.c
     src/epoch.c
-    src/features/breezy_desktop.c
-    src/features/smooth_follow.c
-    src/features/sbs.c
     src/files.c
     src/logging.c
     src/imu.c

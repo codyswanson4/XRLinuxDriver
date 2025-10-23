@@ -1,7 +1,5 @@
 #include "buffer.h"
 #include "config.h"
-#include "features/breezy_desktop.h"
-#include "features/smooth_follow.h"
 #include "imu.h"
 #include "ipc.h"
 #include "logging.h"
@@ -180,9 +178,9 @@ static void update_smooth_follow_params() {
     was_sbs_mode_enabled = state()->sbs_mode_enabled;
     bool was_smooth_follow_enabled = smooth_follow_enabled;
     smooth_follow_enabled = false;
-    if (is_smooth_follow_granted() && (virtual_display_follow || smooth_follow)) {
+    if ((virtual_display_follow || smooth_follow)) {
         smooth_follow_enabled = true;
-    } else if (is_productivity_granted() && breezy_desktop_follow) {
+    } else if breezy_desktop_follow {
         smooth_follow_enabled = true;
         if (!was_smooth_follow_enabled) {
             // we'll capture the screen center on the next modify_screen_center call, before it changes
@@ -426,7 +424,7 @@ imu_quat_type smooth_follow_modify_screen_center_func(uint32_t timestamp_ms, imu
 
 // unlike gaming, smooth follow for desktop is a temporary state, handled via control flags rather than persistent config
 void smooth_follow_handle_control_flag_line_func(char* key, char* value) {
-    if (is_productivity_granted() && sf_config->breezy_desktop_enabled) {
+    if (sf_config->breezy_desktop_enabled) {
         bool was_enabled = state()->breezy_desktop_smooth_follow_enabled == true;
         if (equal(key, "enable_breezy_desktop_smooth_follow")) {
             boolean_config(key, value, &state()->breezy_desktop_smooth_follow_enabled);

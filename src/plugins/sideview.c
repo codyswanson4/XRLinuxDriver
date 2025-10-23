@@ -1,6 +1,5 @@
 #include "config.h"
 #include "devices.h"
-#include "features/smooth_follow.h"
 #include "ipc.h"
 #include "logging.h"
 #include "plugins.h"
@@ -45,7 +44,7 @@ void sideview_handle_config_line_func(void* config, char* key, char* value) {
         }
     } else if (equal(key, "sideview_display_size")) {
         float_config(key, value, &temp_config->display_size);
-    } else if (equal(key, "sideview_smooth_follow_enabled") && is_smooth_follow_granted()) {
+    } else if (equal(key, "sideview_smooth_follow_enabled")) {
         boolean_config(key, value, &temp_config->smooth_follow_enabled);
     }
 };

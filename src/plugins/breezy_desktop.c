@@ -1,5 +1,4 @@
 #include "devices.h"
-#include "features/breezy_desktop.h"
 #include "logging.h"
 #include "plugins.h"
 #include "plugins/breezy_desktop.h"
@@ -64,7 +63,7 @@ void breezy_desktop_handle_config_line_func(void* config, char* key, char* value
     breezy_desktop_config* temp_config = (breezy_desktop_config*) config;
 
     if (equal(key, "external_mode")) {
-        temp_config->enabled = list_string_contains("breezy_desktop", value) && is_productivity_granted();
+        temp_config->enabled = list_string_contains("breezy_desktop", value);
     } else if (equal(key, "external_zoom") || equal(key, "display_zoom")) {
         float_config(key, value, &temp_config->display_zoom);
     } else if (equal(key, "sbs_display_distance")) {
@@ -221,7 +220,7 @@ error:
 }
 
 void write_config_data() {
-    if (fd_is_valid(fd) || (is_productivity_granted() && bd_config && bd_config->enabled)) {
+    if (fd_is_valid(fd) || (bd_config && bd_config->enabled)) {
         pthread_mutex_lock(&file_mutex);
         if (!fd_is_valid(fd)) (void)get_shared_mem_fd();
         if (fd_is_valid(fd)) do_write_config_data(fd);
@@ -259,7 +258,7 @@ imu_error:
 }
 
 void breezy_desktop_reset_imu_data_func() {
-    if (fd_is_valid(fd) || is_productivity_granted() && bd_config && bd_config->enabled) {
+    if (fd_is_valid(fd) || bd_config && bd_config->enabled) {
         breezy_desktop_write_imu_data(&IMU_RESET[0]);
     }
 }
@@ -282,7 +281,7 @@ void breezy_desktop_set_config_func(void* new_config) {
 
 void breezy_desktop_handle_imu_data_func(uint32_t timestamp_ms, imu_quat_type quat, imu_euler_type euler,
                                          imu_euler_type velocities, bool imu_calibrated, ipc_values_type *ipc_values) {
-    if (is_productivity_granted() && bd_config && bd_config->enabled) {
+    if (bd_config && bd_config->enabled) {
         if (imu_calibrated && ipc_values) {
             breezy_desktop_write_imu_data(ipc_values->imu_data);
         } else {
