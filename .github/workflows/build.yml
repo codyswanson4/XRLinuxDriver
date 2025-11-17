@@ -30,6 +30,9 @@ jobs:
             cpp_compiler: g++
 
     steps:
+    - name: hold large packages
+      run: sudo apt-mark hold firefox*
+
     - name: Update packages
       run: sudo apt update && sudo apt upgrade
 
