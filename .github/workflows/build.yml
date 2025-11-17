@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ "freeAndPackage", "main" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -68,3 +68,30 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
 
+    - name: Package release
+      run: bash -x ./bin/package
+
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - Add workflow
+          - ;)
+        draft: true
+        prerelease: false
+
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./out
+        asset_name: XRDriver-x86_64.tar.gz
+        asset_content_type: application/gzip
