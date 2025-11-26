@@ -10,7 +10,7 @@ ARCH=$(uname -m)
 echo "Building for $ARCH"
 
 # create package
-PACKAGE_DIR=xr_driver
+PACKAGE_DIR=./
 PACKAGE_BIN_DIR=$PACKAGE_DIR/bin
 PACKAGE_USER_BIN_DIR=$PACKAGE_BIN_DIR/user
 mkdir -p $PACKAGE_USER_BIN_DIR
