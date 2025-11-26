@@ -15,7 +15,7 @@ PACKAGE_BIN_DIR=$PACKAGE_DIR/bin
 PACKAGE_USER_BIN_DIR=$PACKAGE_BIN_DIR/user
 mkdir -p $PACKAGE_USER_BIN_DIR
 
-mv out $PACKAGE_BIN_DIR/xrDriver
+mv ./build/out $PACKAGE_BIN_DIR/xrDriver
 
 # copy setup and user-relevant scripts
 cp "./bin/setup" "$PACKAGE_DIR" 
