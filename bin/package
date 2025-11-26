@@ -41,8 +41,3 @@ echo $BIN_MANIFEST > $PACKAGE_DIR/manifest
 
 # bundle up the driver directory
 tar -zcvf xrDriver-$ARCH.tar.gz $PACKAGE_DIR
-
-popd
-
-mkdir -p out
-cp xrDriver-$ARCH.tar.gz out/
