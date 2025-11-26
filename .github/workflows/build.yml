@@ -68,6 +68,12 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
 
+    - name: DEBUG-show CWD
+      run: pwd
+
+    - name: DEBUG-show CWD
+      run: ls ./
+
     - name: Package release
       run: bash -x ./bin/package
 
