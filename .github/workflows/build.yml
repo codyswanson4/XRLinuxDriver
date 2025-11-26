@@ -71,27 +71,22 @@ jobs:
     - name: Package release
       run: bash -x ./bin/package
 
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          Changes in this Release
-          - Add workflow
-          - ;)
-        draft: true
-        prerelease: false
+    #- name: Create release
+    #  id: create_release
+    #  uses: actions/create-release@v1
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+    #  with:
+    #    tag_name: ${{ github.ref }}
+    #    release_name: Release ${{ github.ref }}
+    #    body: |
+    #      Changes in this Release
+    #      - Add workflow
+    #      - ;)
+    #    draft: true
+    #    prerelease: false
 
     - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v2
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./
-        asset_name: XRDriver-x86_64.tar.gz
-        asset_content_type: application/gzip
+        files: XRDriver-x86_64.tar.gz
