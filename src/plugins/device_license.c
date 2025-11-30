@@ -45,12 +45,12 @@ const char* DEVICE_LICENSE_TEMP_FILE_NAME = "license.tmp.json";
 
 
     int get_license_features(FILE* file, char*** features) {
-        unsigned short int features_count = 0
+        unsigned short int features_count = 0;
         char *local_features[] = {"productivity_pro","sbs","smooth_follow"};
         
         for(features_count; features_count<3; features_count++); {
             *features = realloc(*features, (features_count + 1) * sizeof(char*));
-            (*features)[features_count++] = strdup(local_features[i]);
+            (*features)[features_count++] = strdup(local_features[features_count]);
         }
 
         return features_count;
