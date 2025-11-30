@@ -6,8 +6,8 @@ set -e
 USER=${SUDO_USER:-$USER}
 GROUP=$(id -gn $USER)
 
-if ![ -e ./build/xrDriver ]; then
-  ./bin/build
+if ! [ -e ./build/xrDriver ]; then
+  ./bin/build.sh
 fi
 
 ARCH=$(uname -m)
