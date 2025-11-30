@@ -24,40 +24,36 @@
 const char* DEVICE_LICENSE_FILE_NAME = "%.8s_license.json";
 const char* DEVICE_LICENSE_TEMP_FILE_NAME = "license.tmp.json";
 
-#ifdef DEVICE_LICENSE_PUBLIC_KEY
-    char* postbody(char* hardwareId, char** features, int features_count) {
-        json_object *root = json_object_new_object();
-        json_object_object_add(root, "hardwareId", json_object_new_string(hardwareId));
-        json_object *featuresArray = json_object_new_array();
-        for (int i = 0; i < features_count; i++) {
-            json_object_array_add(featuresArray, json_object_new_string(features[i]));
-        }
-        json_object_object_add(root, "features", featuresArray);
-        const char* json_str = json_object_to_json_string(root);
-        char* result = strdup(json_str);
-        json_object_put(root);
-        return result;
+char* postbody(char* hardwareId, char** features, int features_count) {
+    json_object *root = json_object_new_object();
+    json_object_object_add(root, "hardwareId", json_object_new_string(hardwareId));
+    json_object *featuresArray = json_object_new_array();
+    for (int i = 0; i < features_count; i++) {
+        json_object_array_add(featuresArray, json_object_new_string(features[i]));
+    }
+    json_object_object_add(root, "features", featuresArray);
+    const char* json_str = json_object_to_json_string(root);
+    char* result = strdup(json_str);
+    json_object_put(root);
+    return result;
+}
+
+bool is_valid_license_signature(const char* license, const char* signature) {
+    return true;
+}
+
+
+int get_license_features(FILE* file, char*** features) {
+    unsigned short int features_count = 0;
+    char *local_features[] = {"productivity_basic","productivity_pro","sbs","smooth_follow"};
+    
+    for(features_count; features_count<3; features_count++); {
+        *features = realloc(*features, (features_count + 1) * sizeof(char*));
+        (*features)[features_count++] = strdup(local_features[features_count]);
     }
 
-    bool is_valid_license_signature(const char* license, const char* signature) {
-        return true;
-    }
-
-
-    int get_license_features(FILE* file, char*** features) {
-        unsigned short int features_count = 0;
-        char *local_features[] = {"productivity_pro","sbs","smooth_follow"};
-        
-        for(features_count; features_count<3; features_count++); {
-            *features = realloc(*features, (features_count + 1) * sizeof(char*));
-            (*features)[features_count++] = strdup(local_features[features_count]);
-        }
-
-        return features_count;
-    }
-#endif
-
-
+    return features_count;
+}
 
 pthread_mutex_t refresh_license_lock = PTHREAD_MUTEX_INITIALIZER;
 void refresh_license(bool force) {
