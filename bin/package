@@ -6,8 +6,12 @@ set -e
 USER=${SUDO_USER:-$USER}
 GROUP=$(id -gn $USER)
 
+if ![ -e ./build/xrDriver ]; then
+  ./bin/build
+fi
+
 ARCH=$(uname -m)
-echo "Building for $ARCH"
+echo "Packaging for $ARCH"
 
 # create package
 PACKAGE_DIR=xr_driver
