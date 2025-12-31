@@ -409,7 +409,7 @@ bool smooth_follow_modify_reference_pose_func(imu_pose_type pose, imu_pose_type*
 
 // unlike gaming, smooth follow for desktop is a temporary state, handled via control flags rather than persistent config
 void smooth_follow_handle_control_flag_line_func(char* key, char* value) {
-    if sf_config->breezy_desktop_enabled {
+    if (sf_config->breezy_desktop_enabled) {
         bool was_enabled = state()->breezy_desktop_smooth_follow_enabled == true;
         if (equal(key, "enable_breezy_desktop_smooth_follow")) {
             boolean_config(key, value, &state()->breezy_desktop_smooth_follow_enabled);
