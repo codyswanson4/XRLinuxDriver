@@ -1,5 +1,4 @@
 #include "devices.h"
-#include "features/breezy_desktop.h"
 #include "logging.h"
 #include "plugins.h"
 #include "plugins/breezy_desktop.h"
@@ -26,7 +25,6 @@
 
 const char* shared_mem_directory = "/dev/shm";
 const char* shared_mem_filename = "breezy_desktop_imu";
-const int breezy_desktop_feature_count = 1;
 static bool has_started = false;
 static pthread_mutex_t file_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -68,7 +66,7 @@ void breezy_desktop_handle_config_line_func(void* config, char* key, char* value
     breezy_desktop_config* temp_config = (breezy_desktop_config*) config;
 
     if (equal(key, "external_mode")) {
-        temp_config->enabled = list_string_contains("breezy_desktop", value) && is_productivity_granted();
+        temp_config->enabled = true;
     } else if (equal(key, "display_distance")) {
         float_config(key, value, &temp_config->display_distance);
     } else if (equal(key, "display_size")) {
@@ -225,7 +223,7 @@ error:
 }
 
 void write_config_data() {
-    if (fd_is_valid(fd) || (is_productivity_granted() && bd_config && bd_config->enabled)) {
+    if (fd_is_valid(fd) || (bd_config && bd_config->enabled)) {
         pthread_mutex_lock(&file_mutex);
         if (!fd_is_valid(fd)) (void)get_shared_mem_fd();
         if (fd_is_valid(fd)) do_write_config_data(fd);
@@ -264,7 +262,7 @@ imu_error:
 }
 
 void breezy_desktop_reset_pose_data_func() {
-    if (fd_is_valid(fd) || is_productivity_granted() && bd_config && bd_config->enabled) {
+    if (fd_is_valid(fd) || bd_config && bd_config->enabled) {
         breezy_desktop_write_pose_data(&ORIENTATION_RESET[0], &POSITION_RESET[0]);
     }
 }
@@ -286,20 +284,13 @@ void breezy_desktop_set_config_func(void* new_config) {
 };
 
 void breezy_desktop_handle_pose_data_func(imu_pose_type pose, imu_euler_type velocities, bool imu_calibrated, ipc_values_type *ipc_values) {
-    if (is_productivity_granted() && bd_config && bd_config->enabled) {
+    if (&& bd_config && bd_config->enabled) {
         if (imu_calibrated && ipc_values) {
             breezy_desktop_write_pose_data(ipc_values->pose_orientation, ipc_values->pose_position);
         } else {
             breezy_desktop_reset_pose_data_func();
         }
     }
-}
-
-int breezy_desktop_register_features_func(char*** features) {
-    *features = calloc(breezy_desktop_feature_count, sizeof(char*));
-    (*features)[0] = strdup(productivity_basic_feature_name);
-
-    return breezy_desktop_feature_count;
 }
 
 void breezy_desktop_start_func() {
@@ -322,7 +313,6 @@ const plugin_type breezy_desktop_plugin = {
     .default_config = breezy_desktop_default_config_func,
     .handle_config_line = breezy_desktop_handle_config_line_func,
     .set_config = breezy_desktop_set_config_func,
-    .register_features = breezy_desktop_register_features_func,
     .handle_pose_data = breezy_desktop_handle_pose_data_func,
     .reset_pose_data = breezy_desktop_reset_pose_data_func,
     .handle_device_disconnect = write_config_data,

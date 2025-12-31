@@ -1,7 +1,5 @@
 #include "config.h"
 #include "devices.h"
-#include "features/smooth_follow.h"
-#include "features/sbs.h"
 #include "imu.h"
 #include "ipc.h"
 #include "logging.h"
@@ -20,8 +18,6 @@
 
 virtual_display_config *vd_config;
 virtual_display_ipc_values_type *virtual_display_ipc_values;
-
-const int virtual_display_feature_count = 2;
 
 void virtual_display_reset_config(virtual_display_config *config) {
     config->enabled = false;
@@ -201,14 +197,6 @@ void virtual_display_set_config_func(void* config) {
     set_virtual_display_ipc_values();
 };
 
-int virtual_display_register_features_func(char*** features) {
-    *features = calloc(virtual_display_feature_count, sizeof(char*));
-    (*features)[0] = strdup(sbs_feature_name);
-    (*features)[1] = strdup(smooth_follow_feature_name);
-
-    return virtual_display_feature_count;
-}
-
 const char *virtual_display_enabled_ipc_name = "virtual_display_enabled";
 const char *virtual_display_look_ahead_cfg_ipc_name = "look_ahead_cfg";
 const char *virtual_display_display_size_ipc_name = "display_size";
@@ -264,7 +252,6 @@ const plugin_type virtual_display_plugin = {
     .default_config = virtual_display_default_config_func,
     .handle_config_line = virtual_display_handle_config_line_func,
     .set_config = virtual_display_set_config_func,
-    .register_features = virtual_display_register_features_func,
     .setup_ipc = virtual_display_setup_ipc_func,
     .handle_ipc_change = set_virtual_display_ipc_values,
     .handle_state = virtual_display_handle_state_func,

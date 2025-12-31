@@ -13,7 +13,6 @@ typedef void (*handle_control_flag_line_func)(char* key, char* value);
 typedef void (*set_config_func)(void* config);
 
 // hook functions
-typedef int (*register_features_func)(char*** features);
 typedef void (*start_func)();
 
 typedef bool (*setup_ipc_func)();
@@ -29,7 +28,6 @@ typedef void (*handle_device_disconnect_func)();
 struct plugin_t {
     char* id;
 
-    register_features_func register_features;
     start_func start;
 
     default_config_func default_config;
@@ -46,8 +44,6 @@ struct plugin_t {
     handle_state_func handle_state;
     handle_device_connect_func handle_device_connect;
     handle_device_disconnect_func handle_device_disconnect;
-
-    // TODO handle feature access change
 };
 typedef struct plugin_t plugin_type;
 

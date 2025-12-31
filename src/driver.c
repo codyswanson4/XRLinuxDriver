@@ -337,9 +337,6 @@ void update_config_from_file(FILE *fp) {
     if (output_mode_changed)
         log_message("Output mode has been changed to '%s'\n", new_config->output_mode);
 
-    if (config()->metrics_disabled != new_config->metrics_disabled)
-        log_message("Metrics have been %s\n", new_config->metrics_disabled ? "disabled" : "enabled");
-
     if (!config()->debug_joystick && new_config->debug_joystick)
         log_message("Joystick debugging has been enabled, to see it, use 'watch -n 0.1 cat $XDG_RUNTIME_DIR/xr_driver/joystick_debug' in bash\n");
     if (config()->debug_joystick && !new_config->debug_joystick)
@@ -353,9 +350,6 @@ void update_config_from_file(FILE *fp) {
 
     if (config()->debug_ipc != new_config->debug_ipc)
         log_message("IPC debugging has been %s\n", new_config->debug_ipc ? "enabled" : "disabled");
-
-    if (config()->debug_license != new_config->debug_license)
-        log_message("License debugging has been %s\n", new_config->debug_license ? "enabled" : "disabled");
 
     if (config()->debug_device != new_config->debug_device)
         log_message("Device debugging has been %s\n", new_config->debug_device ? "enabled" : "disabled");
@@ -642,11 +636,6 @@ int main(int argc, const char** argv) {
 
     set_config(default_config());
     set_state(calloc(1, sizeof(driver_state_type)));
-
-    char** features = NULL;
-    int feature_count = plugins.register_features(&features);
-    state()->registered_features_count = feature_count;
-    state()->registered_features = features;
 
     config_fp = get_or_create_config_file("config.ini", "r", &config_filename, NULL);
     update_config_from_file(config_fp);

@@ -1,7 +1,5 @@
 #include "buffer.h"
 #include "config.h"
-#include "features/breezy_desktop.h"
-#include "features/smooth_follow.h"
 #include "imu.h"
 #include "ipc.h"
 #include "logging.h"
