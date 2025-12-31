@@ -166,8 +166,8 @@ static void update_smooth_follow_params() {
 
     was_sbs_mode_enabled = state()->sbs_mode_enabled;
     bool was_smooth_follow_enabled = smooth_follow_enabled;
-    smooth_follow_enabled = is_smooth_follow_granted() && (virtual_display_follow || smooth_follow);
-    smooth_follow_enabled |= is_productivity_granted() && breezy_desktop_follow;
+    smooth_follow_enabled = virtual_display_follow || smooth_follow;
+    smooth_follow_enabled |= breezy_desktop_follow;
     
     if (!smooth_follow_enabled && was_smooth_follow_enabled && origin_pose) {
         // we'll want to return as close to the original center as possible
@@ -409,7 +409,7 @@ bool smooth_follow_modify_reference_pose_func(imu_pose_type pose, imu_pose_type*
 
 // unlike gaming, smooth follow for desktop is a temporary state, handled via control flags rather than persistent config
 void smooth_follow_handle_control_flag_line_func(char* key, char* value) {
-    if (is_productivity_granted() && sf_config->breezy_desktop_enabled) {
+    if sf_config->breezy_desktop_enabled {
         bool was_enabled = state()->breezy_desktop_smooth_follow_enabled == true;
         if (equal(key, "enable_breezy_desktop_smooth_follow")) {
             boolean_config(key, value, &state()->breezy_desktop_smooth_follow_enabled);
